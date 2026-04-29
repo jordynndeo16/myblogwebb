@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Yohanes Ndeo | Blog Personal Modern</title>
+  <!-- TailwindCSS + Font Awesome + Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
+    body {
+      overflow-x: hidden;
+      background: #f9fafb;
+    }
+    /* Glassmorphism card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(12px);
+      border-radius: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.4);
+    }
+    /* Navbar scroll effect */
+    .navbar-scrolled {
+      background: rgba(31, 111, 95, 0.85);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .navbar-scrolled a, .navbar-scrolled span {
+      color: white !important;
+    }
+    /* Floating animation for profile */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+      100% { transform: translateY(0px); }
+    }
+    .float-animation {
+      animation: float 4s ease-in-out infinite;
+    }
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Parallax background untuk about */
+    .parallax-bg {
+      background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+      background-size: cover;
+      background-attachment: fixed;
+      background-position: center 30%;
+      position: relative;
+      z-index: 0;
+    }
+    .parallax-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(122, 170, 206, 0.3);
+      backdrop-filter: brightness(0.98);
+      z-index: 1;
+    }
+    .parallax-content {
+      position: relative;
+      z-index: 2;
+    }
+    /* Sosmed hover glow */
+    .social-glow i {
+      transition: all 0.3s ease;
+    }
+    .social-glow:hover i {
+      text-shadow: 0 0 12px rgba(255,255,200,0.8);
+      transform: scale(1.2);
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F6F5F;
+      border-radius: 12px;
+    }
+    /* Modal animasi */
+    .modal-container {
+      transition: opacity 0.25s ease, visibility 0.25s;
+    }
+    /* Like button active */
+    .like-btn:active i {
+      transform: scale(1.3);
+    }
+    /* PDF embed responsive */
+    .pdf-embed {
+      width: 100%;
+      height: 500px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+    @media (max-width: 640px) {
+      .pdf-embed {
+        height: 350px;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Navbar Sticky Transparan -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4 bg-transparent">
+    <div class="container mx-auto px-6 md:px-12 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold tracking-tight text-gray-800 transition-all"><span class="bg-clip-text text-transparent bg-gradient-to-r from-[#1F6F5F] to-[#7AAACE]">Yohanes Ndeo</span></a>
+      <div class="hidden md:flex space-x-8 font-medium">
+        <a href="#home" class="nav-link text-gray-800 hover:text-[#1F6F5F] transition">Home</a>
+        <a href="#about" class="nav-link text-gray-800 hover:text-[#1F6F5F] transition">About</a>
+        <a href="#blog" class="nav-link text-gray-800 hover:text-[#1F6F5F] transition">Blog Post</a>
+        <a href="#contact" class="nav-link text-gray-800 hover:text-[#1F6F5F] transition">Contact</a>
+      </div>
+      <div class="md:hidden">
+        <i class="fas fa-bars text-2xl text-gray-700 cursor-pointer" id="mobile-menu-btn"></i>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden bg-white/90 backdrop-blur-md rounded-2xl mx-4 mt-2 p-4 flex flex-col space-y-3 shadow-lg">
+      <a href="#home" class="nav-link-mobile text-gray-800 font-medium py-1">Home</a>
+      <a href="#about" class="nav-link-mobile text-gray-800 font-medium py-1">About</a>
+      <a href="#blog" class="nav-link-mobile text-gray-800 font-medium py-1">Blog Post</a>
+      <a href="#contact" class="nav-link-mobile text-gray-800 font-medium py-1">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden px-6" style="background: linear-gradient(135deg, #7AAACE, #AAFFC7, #1F6F5F); background-size: 200% 200%; animation: gradientShift 8s ease infinite;">
+      <style>
+        @keyframes gradientShift { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+      </style>
+      <div class="text-center max-w-4xl mx-auto reveal">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-white drop-shadow-lg">Selamat Datang di Blog Personal Yohanes Ndeo</h1>
+        <p class="text-xl md:text-2xl mt-6 text-white/90 font-medium">Refleksi Filsafat · Teknologi Kreatif · Tulisan Inspiratif · Catatan Kehidupan</p>
+        <div class="flex flex-wrap gap-5 justify-center mt-10">
+          <a href="#blog" class="px-8 py-3 bg-white text-[#1F6F5F] font-bold rounded-full shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300">Jelajahi Blog</a>
+          <a href="#about" class="px-8 py-3 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-[#1F6F5F] transition-all duration-300">Tentang Saya</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT Section dengan Parallax -->
+    <section id="about" class="parallax-bg py-24 md:py-32">
+      <div class="parallax-content container mx-auto px-6 md:px-12">
+        <div class="bg-white/70 backdrop-blur-md rounded-3xl p-8 md:p-12 shadow-2xl max-w-6xl mx-auto">
+          <div class="flex flex-col lg:flex-row items-center gap-12">
+            <div class="relative group reveal">
+              <div class="w-56 h-56 md:w-72 md:h-72 rounded-full overflow-hidden shadow-2xl float-animation transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                <img src="galeri foto/foto jordy.jpg" alt="Yohanes Ndeo" class="w-full h-full object-cover">
+              </div>
+            </div>
+            <div class="flex-1 space-y-5 reveal">
+              <h2 class="text-3xl font-bold text-gray-800 border-l-8 border-[#1F6F5F] pl-4">Tentang Diriku</h2>
+              <p class="text-gray-700 leading-relaxed">Hallo, Nama saya Yohanes Ndeo, yang akrab disapa Jordy, saya merupakan seorang mahasiswa yang berasal dari Ende, Nusa Tenggara Timur. Saya lahir pada tanggal 16 Mei 2000 dan saat ini berusia 25 tahun. Dalam perjalanan akademik saya seorang alumnus dari Institut Filsafat dan Teknologi Kreatif Ledalero yang berlokasi di Maumere, Flores, Nusa Tenggara Timur. Dengan latar belakang pendidikan tersebut, saya mengembangkan minat dan pengetahuan di bidang filsafat serta teknologi kreatif sebagai bagian dari upaya membentuk kompetensi intelektual dan karakter yang matang.</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                <div class="flex items-center gap-3 bg-[#AAFFC7]/20 p-3 rounded-xl"><i class="fas fa-birthday-cake text-[#1F6F5F] text-xl"></i><span>25 Tahun (16 Mei 2000)</span></div>
+                <div class="flex items-center gap-3 bg-[#AAFFC7]/20 p-3 rounded-xl"><i class="fas fa-map-marker-alt text-[#1F6F5F] text-xl"></i><span>Asal: Ende, NTT</span></div>
+                <div class="flex items-center gap-3 bg-[#AAFFC7]/20 p-3 rounded-xl"><i class="fas fa-graduation-cap text-[#1F6F5F] text-xl"></i><span>Filsafat & Teknologi Kreatif</span></div>
+                <div class="flex items-center gap-3 bg-[#AAFFC7]/20 p-3 rounded-xl"><i class="fas fa-university text-[#1F6F5F] text-xl"></i><span>Kampus: Ledalero, Maumere</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BLOG POST Section -->
+    <section id="blog" class="py-24 bg-gradient-to-b from-white to-[#eef7f0]">
+      <div class="container mx-auto px-6 md:px-12">
+        <div class="text-center reveal mb-12">
+          <h2 class="text-4xl font-bold text-[#1F6F5F] inline-block border-b-4 border-[#7AAACE] pb-2">Catatan & Artikel</h2>
+          <p class="text-gray-600 mt-4">Tulisan bebas, inspirasi, refleksi intelektual, dan lampiran PDF</p>
+        </div>
+
+        <!-- Form Tambah Postingan Baru (dengan upload PDF) -->
+        <div class="glass-card max-w-3xl mx-auto p-6 mb-12 reveal">
+          <h3 class="text-2xl font-semibold text-[#1F6F5F] mb-4"><i class="fas fa-pen-fancy mr-2"></i>Tambah Postingan Baru</h3>
+          <div class="space-y-4">
+            <input type="text" id="newPostTitle" placeholder="Judul Tulisan" class="w-full px-5 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7AAACE] bg-white/70">
+            <textarea id="newPostContent" rows="4" placeholder="Isi tulisan lengkap..." class="w-full px-5 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#7AAACE] bg-white/70"></textarea>
+            <!-- Upload PDF -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Lampirkan PDF (opsional, max 2MB)</label>
+              <input type="file" id="newPostPdf" accept=".pdf" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#1F6F5F] file:text-white hover:file:bg-[#7AAACE]">
+              <p class="text-xs text-gray-400 mt-1">PDF akan tersimpan di LocalStorage dan dapat dibaca langsung di modal artikel</p>
+            </div>
+            <button id="submitNewPost" class="bg-gradient-to-r from-[#1F6F5F] to-[#7AAACE] text-white font-bold px-6 py-3 rounded-xl hover:shadow-xl transition-all w-full">✨ Publikasikan Postingan</button>
+          </div>
+        </div>
+
+        <!-- Daftar Postingan (Card) -->
+        <div id="postsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+      </div>
+    </section>
+
+    <!-- CONTACT Section -->
+    <section id="contact" class="py-24 bg-white/80 relative">
+      <div class="container mx-auto px-6 md:px-12">
+        <div class="text-center reveal mb-12">
+          <h2 class="text-4xl font-bold text-[#1F6F5F]">Hubungi Saya</h2>
+          <p class="text-gray-600">Mari berdiskusi atau sekadar bertukar cerita</p>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-12 max-w-5xl mx-auto">
+          <div class="flex-1 bg-white rounded-3xl shadow-xl p-8 reveal">
+            <h3 class="text-2xl font-bold text-gray-800 mb-5"><i class="fas fa-paper-plane text-[#1F6F5F] mr-2"></i>Kirim Pesan via WhatsApp</h3>
+            <input type="text" id="contactName" placeholder="Nama Lengkap" class="w-full mb-4 px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#AAFFC7]">
+            <input type="text" id="contactPhone" placeholder="Nomor HP (contoh: 628123456789)" class="w-full mb-4 px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#AAFFC7]">
+            <textarea id="contactMessage" rows="4" placeholder="Tulis pesan Anda..." class="w-full mb-5 px-5 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#AAFFC7]"></textarea>
+            <button id="sendWaBtn" class="w-full bg-[#25D366] text-white font-bold py-3 rounded-xl hover:bg-[#128C7E] transition-all flex items-center justify-center gap-2"><i class="fab fa-whatsapp text-xl"></i> Kirim Pesan via WhatsApp</button>
+          </div>
+          <div class="flex-1 bg-gradient-to-br from-[#7AAACE]/20 to-[#AAFFC7]/30 rounded-3xl p-8 backdrop-blur-sm reveal">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6"><i class="fas fa-address-card text-[#1F6F5F] mr-2"></i>Informasi Kontak</h3>
+            <div class="space-y-5">
+              <div class="flex items-center gap-4"><i class="fab fa-whatsapp text-2xl text-green-700"></i><span>+62 82127067309(Admin)</span></div>
+              <div class="flex items-center gap-4"><i class="fas fa-envelope text-2xl text-[#1F6F5F]"></i><span>stefansnitt1@gmail.com</span></div>
+              <div class="flex items-center gap-4"><i class="fas fa-map-pin text-2xl text-red-500"></i><span>Maumere, Flores - Nusa Tenggara Timur</span></div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-gray-300">
+              <p class="text-sm text-gray-600"><i class="fas fa-clock mr-1"></i>Respon cepat: 08.00 - 20.00 WITA</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-[#0f2c25] to-[#1F6F5F] text-white py-8 mt-6">
+    <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-sm">&copy; 2025 Yohanes Ndeo — Filosofi & Teknologi Kreatif</p>
+      <div class="flex gap-6 text-2xl">
+        <a href="https://facebook.com/Jordyn Ndeo" class="social-glow text-white hover:text-[#AAFFC7] transition"><i class="fab fa-facebook"></i></a>
+        <a href="https://instagram.com/jordyndeo" class="social-glow text-white hover:text-[#AAFFC7] transition"><i class="fab fa-instagram"></i></a>
+        <a href="mailto:stefansmitt1@gmail.com" class="social-glow text-white hover:text-[#AAFFC7] transition"><i class="fas fa-envelope"></i></a>
+      </div>
+    </div>
+    
+  </footer>
+
+  <!-- Modal Baca Selengkapnya (dengan embedded PDF langsung) -->
+  <div id="readModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 modal-container">
+    <div class="bg-white rounded-2xl max-w-4xl w-[90%] max-h-[85vh] overflow-y-auto p-6 relative shadow-2xl">
+      <button class="absolute top-4 right-5 text-3xl text-gray-500 hover:text-red-500" id="closeReadModal">&times;</button>
+      <h3 id="modalTitle" class="text-2xl font-bold text-[#1F6F5F] pr-8">Judul</h3>
+      <p id="modalDate" class="text-gray-400 text-sm mt-1"></p>
+      <div id="modalFullContent" class="mt-5 text-gray-700 leading-relaxed"></div>
+      <!-- Di sini PDF viewer akan ditampilkan jika ada -->
+      <div id="modalPdfViewer" class="mt-5"></div>
+    </div>
+  </div>
+
+  <!-- Modal Komentar -->
+  <div id="commentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 opacity-0 invisible transition-all duration-300 modal-container">
+    <div class="bg-white rounded-2xl max-w-lg w-[90%] max-h-[80vh] flex flex-col p-6 relative shadow-2xl">
+      <button class="absolute top-4 right-6 text-2xl text-gray-500 hover:text-red-500" id="closeCommentModal">&times;</button>
+      <h3 class="text-xl font-bold text-[#1F6F5F] mb-3">💬 Komentar</h3>
+      <div id="commentsList" class="flex-1 overflow-y-auto mb-4 space-y-3 max-h-64 pr-1"></div>
+      <div class="border-t pt-3">
+        <input type="text" id="commentNameInput" placeholder="Nama Anda" class="w-full border rounded-lg px-3 py-2 text-sm mb-2">
+        <textarea id="commentTextInput" rows="2" placeholder="Tulis komentar..." class="w-full border rounded-lg px-3 py-2 text-sm"></textarea>
+        <button id="addCommentBtn" class="mt-2 bg-[#1F6F5F] text-white px-4 py-2 rounded-lg w-full hover:bg-[#7AAACE] transition">Kirim Komentar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- DATA & STORAGE ----------
+    let posts = [];
+    let currentCommentPostId = null;
+
+    // Helper: baca file sebagai base64
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Simpan ke localStorage
+    function saveData() {
+      localStorage.setItem('blog_posts_ndeo', JSON.stringify(posts));
+    }
+
+    
+
+    // Escape HTML
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+      });
+    }
+
+    // Truncate teks
+    function truncate(text, maxLength = 110) {
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    }
+
+    // Render semua postingan ke dalam card
+    function renderAllPosts() {
+      const container = document.getElementById('postsContainer');
+      if (!container) return;
+      if (posts.length === 0) {
+        container.innerHTML = '<div class="col-span-full text-center p-10 text-gray-500">Belum ada tulisan. Buat postingan pertama!</div>';
+        return;
+      }
+      let html = '';
+      posts.forEach(post => {
+        const preview = truncate(post.content, 100);
+        const pdfBadge = post.pdfBase64 ? `<div class="mt-2 inline-flex items-center gap-1 text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full"><i class="fas fa-file-pdf"></i> ${escapeHtml(post.pdfName)}</div>` : '';
+        html += `
+          <div class="glass-card p-6 flex flex-col justify-between transition-all duration-300" data-post-id="${post.id}">
+            <div>
+              <h3 class="text-xl font-bold text-gray-800 mb-2">${escapeHtml(post.title)}</h3>
+              <p class="text-xs text-gray-400 mb-3"><i class="far fa-calendar-alt mr-1"></i> ${post.date}</p>
+              <p class="text-gray-600 text-sm leading-relaxed">${escapeHtml(preview)}</p>
+              ${pdfBadge}
+            </div>
+            <div class="mt-5 flex flex-wrap justify-between items-center gap-3">
+              <button class="readmore-btn text-[#1F6F5F] font-semibold text-sm hover:underline" data-id="${post.id}">Baca Selengkapnya →</button>
+              <div class="flex gap-4 items-center">
+                <button class="like-btn flex items-center gap-1 text-gray-600 hover:text-red-500 transition" data-id="${post.id}">
+                  <i class="far fa-heart text-red-400"></i> <span class="like-count">${post.likes}</span>
+                </button>
+                <button class="comment-btn flex items-center gap-1 text-gray-600 hover:text-blue-600 transition" data-id="${post.id}">
+                  <i class="far fa-comment"></i> <span>${post.comments.length}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+
+      // Event listener untuk tombol baca selengkapnya
+      document.querySelectorAll('.readmore-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = parseInt(btn.dataset.id);
+          const post = posts.find(p => p.id === id);
+          if (post) openReadModal(post);
+        });
+      });
+      // Event like
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = parseInt(btn.dataset.id);
+          const postIdx = posts.findIndex(p => p.id === id);
+          if (postIdx !== -1) {
+            posts[postIdx].likes += 1;
+            saveData();
+            renderAllPosts();
+          }
+        });
+      });
+      // Event komentar
+      document.querySelectorAll('.comment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = parseInt(btn.dataset.id);
+          currentCommentPostId = id;
+          openCommentModal(id);
+        });
+      });
+    }
+
+    // Buka modal baca artikel lengkap + embedded PDF (langsung tampil)
+    function openReadModal(post) {
+      document.getElementById('modalTitle').innerText = post.title;
+      document.getElementById('modalDate').innerHTML = `<i class="far fa-calendar-alt mr-1"></i> ${post.date}`;
+      document.getElementById('modalFullContent').innerHTML = `<p class="whitespace-pre-line">${escapeHtml(post.content)}</p>`;
+      
+      const pdfViewerDiv = document.getElementById('modalPdfViewer');
+      if (post.pdfBase64) {
+        // Tampilkan embed PDF langsung di dalam modal artikel
+        pdfViewerDiv.innerHTML = `
+          <div class="mt-4 p-3 bg-gray-50 rounded-xl">
+            <div class="flex items-center gap-2 text-[#1F6F5F] font-semibold mb-2">
+              <i class="fas fa-file-pdf"></i> <span>Lampiran PDF: ${escapeHtml(post.pdfName)}</span>
+            </div>
+            <iframe src="${post.pdfBase64}" class="pdf-embed" title="PDF Viewer"></iframe>
+          </div>
+        `;
+      } else {
+        pdfViewerDiv.innerHTML = '';
+      }
+      
+      const modal = document.getElementById('readModal');
+      modal.classList.remove('opacity-0', 'invisible');
+      modal.classList.add('opacity-100', 'visible');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeReadModal() {
+      const modal = document.getElementById('readModal');
+      modal.classList.add('opacity-0', 'invisible');
+      modal.classList.remove('opacity-100', 'visible');
+      document.body.style.overflow = '';
+      // Bersihkan iframe agar tidak terus berjalan di background
+      document.getElementById('modalPdfViewer').innerHTML = '';
+    }
+
+    // Modal komentar
+    function openCommentModal(postId) {
+      const post = posts.find(p => p.id === postId);
+      if (!post) return;
+      const commentsContainer = document.getElementById('commentsList');
+      if (post.comments.length === 0) commentsContainer.innerHTML = '<p class="text-gray-400 text-sm">Belum ada komentar. Jadilah yang pertama!</p>';
+      else {
+        commentsContainer.innerHTML = post.comments.map(c => `<div class="bg-gray-100 p-2 rounded-lg"><b class="text-[#1F6F5F]">${escapeHtml(c.name)}</b><p class="text-sm">${escapeHtml(c.text)}</p></div>`).join('');
+      }
+      document.getElementById('commentNameInput').value = '';
+      document.getElementById('commentTextInput').value = '';
+      const modal = document.getElementById('commentModal');
+      modal.classList.remove('opacity-0', 'invisible');
+      modal.classList.add('opacity-100', 'visible');
+      document.body.style.overflow = 'hidden';
+      
+      const addBtn = document.getElementById('addCommentBtn');
+      const newHandler = () => {
+        const name = document.getElementById('commentNameInput').value.trim() || "Anonim";
+        const text = document.getElementById('commentTextInput').value.trim();
+        if (!text) { alert("Komentar tidak boleh kosong"); return; }
+        const postIndex = posts.findIndex(p => p.id === postId);
+        if (postIndex !== -1) {
+          posts[postIndex].comments.push({ name: name, text: text });
+          saveData();
+          renderAllPosts();
+          closeCommentModal();
+        }
+        addBtn.removeEventListener('click', newHandler);
+      };
+      addBtn.removeEventListener('click', addBtn._listener);
+      addBtn._listener = newHandler;
+      addBtn.addEventListener('click', newHandler);
+    }
+
+    function closeCommentModal() {
+      const modal = document.getElementById('commentModal');
+      modal.classList.add('opacity-0', 'invisible');
+      modal.classList.remove('opacity-100', 'visible');
+      document.body.style.overflow = '';
+    }
+
+    // Fungsi menambah postingan baru dengan PDF
+    async function addNewPost(title, content, pdfFile = null) {
+      if (!title.trim() || !content.trim()) {
+        alert("Judul dan isi tulisan harus diisi!");
+        return false;
+      }
+      let pdfBase64 = null;
+      let pdfName = null;
+      if (pdfFile) {
+        if (pdfFile.size > 2 * 1024 * 1024) {
+          alert("Ukuran PDF melebihi 2MB. Harap pilih file yang lebih kecil.");
+          return false;
+        }
+        pdfBase64 = await readFileAsBase64(pdfFile);
+        pdfName = pdfFile.name;
+      }
+      const newPost = {
+        id: Date.now(),
+        title: title.trim(),
+        content: content.trim(),
+        date: new Date().toLocaleDateString('id-ID'),
+        likes: 0,
+        comments: [],
+        pdfBase64: pdfBase64,
+        pdfName: pdfName
+      };
+      posts.unshift(newPost);
+      saveData();
+      renderAllPosts();
+      return true;
+    }
+
+    // Event submit postingan baru
+    document.getElementById('submitNewPost')?.addEventListener('click', async () => {
+      const title = document.getElementById('newPostTitle').value;
+      const content = document.getElementById('newPostContent').value;
+      const pdfInput = document.getElementById('newPostPdf');
+      const pdfFile = pdfInput.files[0];
+      const success = await addNewPost(title, content, pdfFile);
+      if (success) {
+        document.getElementById('newPostTitle').value = '';
+        document.getElementById('newPostContent').value = '';
+        pdfInput.value = '';
+        document.getElementById('blog').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    // WhatsApp kontak
+    document.getElementById('sendWaBtn')?.addEventListener('click', () => {
+      let name = document.getElementById('contactName').value.trim();
+      let msg = document.getElementById('contactMessage').value.trim();
+      let adminNumber = "6282127067309";
+      let text = `Halo Yohanes Ndeo, saya ${name || 'Pengunjung'}. Pesan: ${msg}`;
+      let url = `https://wa.me/${adminNumber}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scrolled');
+        navbar.classList.remove('bg-transparent');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+        navbar.classList.add('bg-transparent');
+      }
+    });
+
+    // Scroll reveal Intersection Observer
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+        }
+      });
+    }, { threshold: 0.2, rootMargin: "0px 0px -40px 0px" });
+    revealElements.forEach(el => observer.observe(el));
+
+    // Menutup modal
+    document.getElementById('closeReadModal')?.addEventListener('click', closeReadModal);
+    document.getElementById('closeCommentModal')?.addEventListener('click', closeCommentModal);
+    window.addEventListener('click', (e) => {
+      if (e.target === document.getElementById('readModal')) closeReadModal();
+      if (e.target === document.getElementById('commentModal')) closeCommentModal();
+    });
+
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileBtn?.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    document.querySelectorAll('.nav-link-mobile').forEach(link => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // Inisialisasi
+    loadData();
+  </script>
+</body>
+</html>
